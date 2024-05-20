@@ -21,15 +21,15 @@ export const useInitApp = () => {
       feConfigs: { scripts, isPlus, show_git, systemTitle }
     } = await clientInitData();
 
-    setTitle(systemTitle || 'FastGPT');
+    setTitle(systemTitle || 'YiLiao.AI');
 
     // log fastgpt
     if (!isPlus) {
-      console.log(
-        '%cWelcome to FastGPT',
-        'font-family:Arial; color:#3370ff ; font-size:18px; font-weight:bold;',
-        `GitHub：https://github.com/labring/FastGPT`
-      );
+      // console.log(
+      //   '%cWelcome to FastGPT',
+      //   'font-family:Arial; color:#3370ff ; font-size:18px; font-weight:bold;',
+      //   `GitHub：https://github.com/labring/FastGPT`
+      // );
     }
     if (show_git) {
       loadGitStar();

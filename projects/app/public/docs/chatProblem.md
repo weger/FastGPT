@@ -9,6 +9,3 @@
 - [计费规则](https://doc.fastgpt.in/docs/pricing/)
 
 **其他问题**
-| 扫码进入交流群 |
-| ----------------------- |
-| ![](https://oss.laf.run/htr4n1-images/fastgpt-qr-code.jpg) |

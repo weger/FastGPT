@@ -85,7 +85,7 @@ const Login = () => {
         <Flex
           flexDirection={'column'}
           w={['100%', 'auto']}
-          h={['100%', '700px']}
+          h={['100%', 'auto']}
           maxH={['100%', '90vh']}
           bg={'white'}
           px={['5vw', '88px']}
@@ -105,17 +105,6 @@ const Login = () => {
               </Center>
             )}
           </Box>
-          {feConfigs?.concatMd && (
-            <Box
-              mt={8}
-              color={'primary.700'}
-              cursor={'pointer'}
-              textAlign={'center'}
-              onClick={onOpen}
-            >
-              无法登录，点击联系
-            </Box>
-          )}
         </Flex>
 
         {isOpen && <CommunityModal onClose={onClose} />}

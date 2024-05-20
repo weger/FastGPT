@@ -133,7 +133,7 @@ const LoginForm = ({ setPageType, loginSuccess }: Props) => {
           my={6}
           w={'100%'}
           size={['md', 'lg']}
-          colorScheme="blue"
+          colorScheme="orange"
           isLoading={requesting}
           onClick={handleSubmit(onclickLogin)}
         >
