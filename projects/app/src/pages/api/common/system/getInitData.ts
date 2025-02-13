@@ -29,11 +29,88 @@ async function handler(
     return {
       bufferId: global.systemInitBufferId,
       systemVersion: global.systemVersion || '0.0.0'
-    };
-  }
+    }
+  });
+}
 
-  return {
-    bufferId: global.systemInitBufferId,
+const defaultFeConfigs: FastGPTFeConfigsType = {
+  show_emptyChat: true,
+  show_git: true,
+  docUrl: 'https://doc.fastgpt.in',
+  openAPIDocUrl: 'https://doc.fastgpt.in/docs/development/openapi',
+  systemTitle: 'YiLiao.AI',
+  concatMd: '关于我们: [YiLiao.AI](https://dataclubs.com/#about)',
+  limit: {
+    exportDatasetLimitMinutes: 0,
+    websiteSyncLimitMinuted: 0
+  },
+  scripts: [],
+  favicon: '/favicon.ico',
+  uploadFileMaxSize: 500
+};
+
+export async function getInitConfig() {
+  if (global.systemInitd) return;
+  global.systemInitd = true;
+
+  try {
+    await connectToDatabase();
+
+    await Promise.all([
+      initSystemConfig(),
+      // getSimpleModeTemplates(),
+      getSystemVersion(),
+      getSystemPlugin(),
+
+      // abandon
+      getSystemPluginV1()
+    ]);
+
+    console.log({
+      communityPlugins: global.communityPlugins
+    });
+  } catch (error) {
+    console.error('Load init config error', error);
+    global.systemInitd = false;
+
+    if (!global.feConfigs) {
+      exit(1);
+    }
+  }
+}
+
+export async function initSystemConfig() {
+  // load config
+  const [dbConfig, fileConfig] = await Promise.all([
+    getFastGPTConfigFromDB(),
+    readConfigData('config.json')
+  ]);
+  const fileRes = JSON.parse(fileConfig) as FastGPTConfigFileType;
+
+  // get config from database
+  const config: FastGPTConfigFileType = {
+    feConfigs: {
+      ...fileRes?.feConfigs,
+      ...defaultFeConfigs,
+      ...(dbConfig.feConfigs || {}),
+      isPlus: !!FastGPTProUrl
+    },
+    systemEnv: {
+      ...fileRes.systemEnv,
+      ...(dbConfig.systemEnv || {})
+    },
+    subPlans: dbConfig.subPlans || fileRes.subPlans,
+    llmModels: dbConfig.llmModels || fileRes.llmModels || [],
+    vectorModels: dbConfig.vectorModels || fileRes.vectorModels || [],
+    reRankModels: dbConfig.reRankModels || fileRes.reRankModels || [],
+    audioSpeechModels: dbConfig.audioSpeechModels || fileRes.audioSpeechModels || [],
+    whisperModel: dbConfig.whisperModel || fileRes.whisperModel
+  };
+
+  // set config
+  initFastGPTConfig(config);
+
+  console.log({
     feConfigs: global.feConfigs,
     subPlans: global.subPlans,
     systemVersion: global.systemVersion || '0.0.0',
